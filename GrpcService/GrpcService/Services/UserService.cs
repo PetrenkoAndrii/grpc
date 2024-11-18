@@ -47,13 +47,15 @@ public class UserService : UserBase
 
     public async override Task<AddUserResponse> AddUser(AddUserRequest request, ServerCallContext context)
     {
+        var response = new AddUserResponse { Id = -1 };
+
         var isUniqueUserName = await _repository.IsUniqueUserNameAsync(request.UserName);
         if (!isUniqueUserName)
-            return new AddUserResponse { Id = -1 };
+            return response;
 
         var isUniqueEmail = await _repository.IsUniqueEmailAsync(request.Email);
         if (!isUniqueEmail)
-            return new AddUserResponse { Id = -1 };
+            return response;
 
         var dateTime = DateTime.Now;
         var entity = new UserEntity
@@ -67,6 +69,7 @@ public class UserService : UserBase
         };
 
         var addedEntityId = await _repository.AddAsync(entity);
-        return new AddUserResponse { Id = addedEntityId };
+        response.Id = addedEntityId;
+        return response;
     }
 }

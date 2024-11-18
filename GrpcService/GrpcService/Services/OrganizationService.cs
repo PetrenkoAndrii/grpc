@@ -29,9 +29,11 @@ public class OrganizationService : Organization.OrganizationBase
     /// <returns>Organization item response</returns>
     public override async Task<AddOrganizationResponse> AddOrganization(AddOrganizationRequest request, ServerCallContext context)
     {
+        var response = new AddOrganizationResponse { Id = -1 };
+
         var isUniqueName = await _repository.IsUniqueNameAsync(request.Name);
         if (!isUniqueName)
-            return new AddOrganizationResponse { Id = -1 };
+            return response;
 
         var dateTime = DateTime.Now;
         var entity = new OrganizationEntity
@@ -44,7 +46,8 @@ public class OrganizationService : Organization.OrganizationBase
         };
 
         var addedEntityId = await _repository.AddAsync(entity);
-        return new AddOrganizationResponse { Id = addedEntityId };
+        response.Id = addedEntityId;
+        return response;
     }
 
     /// <summary>
