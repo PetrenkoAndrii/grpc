@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+option csharp_namespace = "GrpcClient";
+
+package user;
+
+service User {
+  rpc GetUser (GetUserRequest) returns (UserResponse);
+}
+
+// The request message containing the user's id.
+message GetUserRequest {
+  int32 Id = 1;
+}
+
+// The response message containing the user.
+message UserResponse {
+  string Name = 1; 
+  string Username = 2;
+  string Email = 3;
+  string CreatedAt = 4;
+  string UpdatedAt = 5;
+}

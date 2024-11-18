@@ -14,6 +14,7 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseInMemoryDataba
 builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.AddScoped<IOrganizationRepository, OrganizationRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 var app = builder.Build();
 
@@ -21,6 +22,7 @@ await SeedDatabaseAsync(app.Services);
 
 // Configure the HTTP request pipeline.
 app.MapGrpcService<OrganizationService>();
+app.MapGrpcService<UserService>();
 app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
 
 app.Run();
@@ -67,8 +69,8 @@ static async Task SeedDatabaseAsync(IServiceProvider serviceProvider)
             {
                 Id = i,
                 Email = $"test{i}@gmail.com",
-                FirstName = $"Name {i}",
-                LastName = $"User {i}",
+                Name = $"Name {i}",
+                UserName = $"User {i}",
                 IsDeleted = false,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now
