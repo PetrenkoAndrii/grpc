@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+option csharp_namespace = "GrpcService";
+
+package organization;
+
+// The Organization service definition.
+service Organization {
+  rpc AddOrganization (AddOrganizationRequest) returns (AddOrganizationResponse);
+}
+
+// The request message containing the organization's name and .
+message AddOrganizationRequest {
+  string Name = 1; 
+  string Address = 2;
+}
+
+// The response message containing the added organization id.
+message AddOrganizationResponse {
+	int32 Id = 1;
+}

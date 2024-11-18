@@ -1,3 +1,6 @@
+using HttpService.Infrastructure;
+using HttpService.Infrastructure.Interfaces;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -7,8 +10,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var app = builder.Build();
+builder.Services.Configure<GrpcServiceConfiguration>(
+                    builder.Configuration.GetSection("GrpcService"));
+builder.Services.AddHttpClient();
+builder.Services.AddSingleton<IGrpcClientFactory, GrpcClientFactory>();
 
+var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
