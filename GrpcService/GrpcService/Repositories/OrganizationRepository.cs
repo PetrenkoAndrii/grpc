@@ -33,7 +33,9 @@ public class OrganizationRepository : IOrganizationRepository
 
     public async Task<OrganizationEntity> GetByIdAsync(int id)
     {
-        var organization = await _context.Organizations.FirstOrDefaultAsync(o => o.Id == id);
+        var organization = await _context.Organizations
+                                        .Include(o => o.UsersOrganizations)
+                                        .FirstOrDefaultAsync(o => o.Id == id);
         return organization!;
     }
 

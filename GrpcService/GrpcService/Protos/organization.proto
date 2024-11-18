@@ -33,6 +33,7 @@ message GetOrganizationRequest {
 message OrganizationResponse {
   string Name = 1; 
   string Address = 2;
+  string UsersId = 3;
 }
 
 // The request message containing the organization's id.

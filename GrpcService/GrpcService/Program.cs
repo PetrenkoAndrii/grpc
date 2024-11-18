@@ -58,4 +58,38 @@ static async Task SeedDatabaseAsync(IServiceProvider serviceProvider)
 
         await context.SaveChangesAsync();
     }
+
+    if (!context.Users.Any())
+    {
+        for (int i = 1; i <= 10; i++)
+        {
+            await context.Users.AddAsync(new UserEntity
+            {
+                Id = i,
+                Email = $"test{i}@gmail.com",
+                FirstName = $"Name {i}",
+                LastName = $"User {i}",
+                IsDeleted = false,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
+            });
+        }
+
+        await context.SaveChangesAsync();
+    }
+
+    if (!context.UsersOrganizations.Any()) 
+    {
+        await context.UsersOrganizations.AddRangeAsync(
+            new UsersOrganizationsEntity { Id = 1, UserId = 3, OrganizationId = 1 },
+            new UsersOrganizationsEntity { Id = 2, UserId = 1, OrganizationId = 5 },
+            new UsersOrganizationsEntity { Id = 3, UserId = 2, OrganizationId = 5 },
+            new UsersOrganizationsEntity { Id = 4, UserId = 2, OrganizationId = 1 },
+            new UsersOrganizationsEntity { Id = 5, UserId = 7, OrganizationId = 3 },
+            new UsersOrganizationsEntity { Id = 6, UserId = 7, OrganizationId = 2 },
+            new UsersOrganizationsEntity { Id = 7, UserId = 5, OrganizationId = 4 }
+        );
+
+        await context.SaveChangesAsync();
+    }
 }

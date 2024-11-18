@@ -13,6 +13,7 @@ public class OrganizationProfile : Profile
     /// </summary>
     public OrganizationProfile() 
     {
-        CreateMap<OrganizationEntity, OrganizationResponse>();
+        CreateMap<OrganizationEntity, OrganizationResponse>()
+            .ForMember(dest => dest.UsersId, option => option.MapFrom(s => string.Join(", ", s.UsersOrganizations.Select(x => x.UserId))));
     }
 }
