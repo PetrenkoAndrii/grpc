@@ -68,11 +68,7 @@ public class OrganizationServiceTests
     {
         //Arrange
         repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<int>()))
-            .ReturnsAsync(new OrganizationEntity
-            {
-                Address = "address",
-                Name = "name",
-            });
+            .ReturnsAsync(GetOrganizationEntity());
         var request = new GetOrganizationRequest { Id = 1 };
 
         //Act
@@ -82,4 +78,63 @@ public class OrganizationServiceTests
         Assert.IsNotNull(result);
         Assert.IsTrue(result.IsCompletedSuccessfully);
     }
+
+    [TestMethod]
+    public async Task DeleteOrganization_NotFoundEntity()
+    {
+        //Arrange
+        repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<int>()))
+            .ReturnsAsync(It.IsAny<OrganizationEntity>());
+        var request = new DeleteOrganizationRequest { Id = 100 };
+
+        //Act
+        var result = await organizationService.DeleteOrganization(request, It.IsAny<ServerCallContext>());
+
+        //Assert
+        Assert.IsNotNull(result);
+        Assert.IsFalse(result.IsSuccess);
+    }
+
+    [TestMethod]
+    public async Task DeleteOrganization_NotSuccess()
+    {
+        //Arrange
+        repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<int>()))
+            .ReturnsAsync(GetOrganizationEntity());
+        repositoryMock.Setup(r => r.DeleteAsync(It.IsAny<OrganizationEntity>()))
+                    .ReturnsAsync(false);
+        var request = new DeleteOrganizationRequest { Id = 1 };
+
+        //Act
+        var result = await organizationService.DeleteOrganization(request, It.IsAny<ServerCallContext>());
+
+        //Assert
+        Assert.IsNotNull(result);
+        Assert.IsFalse(result.IsSuccess);
+    }
+
+    [TestMethod]
+    public async Task DeleteOrganization_Success()
+    {
+        //Arrange
+        repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<int>()))
+            .ReturnsAsync(GetOrganizationEntity());
+        repositoryMock.Setup(r => r.DeleteAsync(It.IsAny<OrganizationEntity>()))
+                    .ReturnsAsync(true);
+        var request = new DeleteOrganizationRequest { Id = 1 };
+
+        //Act
+        var result = await organizationService.DeleteOrganization(request, It.IsAny<ServerCallContext>());
+
+        //Assert
+        Assert.IsNotNull(result);
+        Assert.IsTrue(result.IsSuccess);
+    }
+
+    private static OrganizationEntity GetOrganizationEntity() =>
+        new()
+        {
+            Address = "address",
+            Name = "name",
+        };
 }

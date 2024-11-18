@@ -9,6 +9,8 @@ service Organization {
   rpc AddOrganization (AddOrganizationRequest) returns (AddOrganizationResponse);
 
   rpc GetOrganization (GetOrganizationRequest) returns (OrganizationResponse);
+  
+  rpc DeleteOrganization (DeleteOrganizationRequest) returns (DeleteOrganizationResponse);
 }
 
 // The request message containing the organization's name and .
@@ -31,4 +33,14 @@ message GetOrganizationRequest {
 message OrganizationResponse {
   string Name = 1; 
   string Address = 2;
+}
+
+// The request message containing the organization's id.
+message DeleteOrganizationRequest {
+  int32 Id = 1;
+}
+
+// The response message containing the organization.
+message DeleteOrganizationResponse {
+  bool IsSuccess = 1;
 }

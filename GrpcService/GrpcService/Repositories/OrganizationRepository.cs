@@ -36,4 +36,10 @@ public class OrganizationRepository : IOrganizationRepository
         var organization = await _context.Organizations.FirstOrDefaultAsync(o => o.Id == id);
         return organization!;
     }
+
+    public async Task<bool> DeleteAsync(OrganizationEntity organization)
+    {
+        var result = await _context.SaveChangesAsync();
+        return result > 0;
+    }
 }

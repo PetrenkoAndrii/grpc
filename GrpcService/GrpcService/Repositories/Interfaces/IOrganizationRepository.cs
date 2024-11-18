@@ -24,4 +24,11 @@ public interface IOrganizationRepository
     /// <param name="id">The id of the Organization to look for</param>
     /// <returns>Organization entity</returns>
     Task<OrganizationEntity> GetByIdAsync(int id);
+
+    /// <summary>
+    /// Sets IsDeleted Organization field to 'true'.
+    /// </summary>
+    /// <param name="Organization">Organization to process</param>
+    /// <returns>True - if entity was updated, False - if it wasn't</returns>
+    Task<bool> DeleteAsync(OrganizationEntity organization);
 }

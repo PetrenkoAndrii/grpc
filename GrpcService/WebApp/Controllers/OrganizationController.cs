@@ -31,4 +31,11 @@ public class OrganizationController : ControllerBase
         var response = await client.AddOrganizationAsync(new AddOrganizationRequest { Name = name, Address = address });
         return Ok(response);
     }
+
+    [HttpDelete]
+    public async Task<IActionResult> DeleteOrganization(int id)
+    {
+        var response = await client.DeleteOrganizationAsync(new DeleteOrganizationRequest { Id = id }); 
+        return Ok(response);
+    }
 }

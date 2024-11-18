@@ -62,4 +62,28 @@ public class OrganizationService : Organization.OrganizationBase
         var response = _mapper.Map<OrganizationResponse>(entity);
         return response;
     }
+
+    /// <summary>
+    /// Service for DeleteOrganization
+    /// </summary>
+    /// <param name="request">Holds DeleteOrganizationRequest parameters</param>
+    /// <param name="context">ServerCallContext context</param>
+    /// <returns>DeleteOrganizationResponse response which contains IsSuccess field</returns>
+    public override async Task<DeleteOrganizationResponse> DeleteOrganization(DeleteOrganizationRequest request, ServerCallContext context)
+    {
+        var response = new DeleteOrganizationResponse();
+        var entity = await _repository.GetByIdAsync(request.Id);
+        if (entity == null)
+        {
+            response.IsSuccess = false;
+            return response;
+        }
+
+        entity.IsDeleted = true;
+        entity.DeletedAt = DateTime.Now;
+        var isSuccess = await _repository.DeleteAsync(entity);
+
+        response.IsSuccess = isSuccess;
+        return response;
+    }
 }

@@ -99,4 +99,20 @@ public class OrganizationRepositoryTests
         //Assert
         Assert.IsNull(result);
     }
+
+    [TestMethod]
+    public async Task Delete_Success()
+    {
+        //Arrange
+        var organization = await repository.GetByIdAsync(2);
+        organization.IsDeleted = true;
+        organization.DeletedAt = DateTime.Now;
+
+        //Act
+        var result = await repository.DeleteAsync(organization);
+
+        //Assert
+        Assert.IsNotNull(result);
+        Assert.IsTrue(result);
+    }
 }
