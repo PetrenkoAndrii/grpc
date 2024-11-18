@@ -29,7 +29,7 @@ public class UserRepositoryTests
         for (int i = 1; i <= DbRecordsCount; i++)
         {
             context.Users.Add(
-                new UserEntity { Name = $"First Name_{i}", UserName = $"Last Name_{i}", Email = $"test_{i}@gmail.com" });
+                new UserEntity { Name = $"Name_{i}", UserName = $"UserName_{i}", Email = $"test_{i}@gmail.com" });
         }
         context.SaveChanges();
     }
@@ -55,5 +55,49 @@ public class UserRepositoryTests
 
         //Assert
         Assert.IsNull(result);
+    }
+
+    [TestMethod]
+    public async Task IsUniqueUserName_Success()
+    {
+        //Arrange
+        //Act
+        var result = await repository.IsUniqueUserNameAsync("UserName");
+
+        //Assert
+        Assert.IsTrue(result);
+    }
+
+    [TestMethod]
+    public async Task IsUniqueName_NotSuccess()
+    {
+        //Arrange
+        //Act
+        var result = await repository.IsUniqueUserNameAsync("UserName_1");
+
+        //Assert
+        Assert.IsFalse(result);
+    }
+
+    [TestMethod]
+    public async Task IsUniqueEmail_Success()
+    {
+        //Arrange
+        //Act
+        var result = await repository.IsUniqueEmailAsync("andrew@gmail.com");
+
+        //Assert
+        Assert.IsTrue(result);
+    }
+
+    [TestMethod]
+    public async Task IsUniqueEmail_NotSuccess()
+    {
+        //Arrange
+        //Act
+        var result = await repository.IsUniqueEmailAsync("test_1@gmail.com");
+
+        //Assert
+        Assert.IsFalse(result);
     }
 }

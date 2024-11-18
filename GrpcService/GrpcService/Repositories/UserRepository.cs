@@ -17,10 +17,30 @@ public class UserRepository : IUserRepository
         _context = context;
     }
 
+    public async Task<int> AddAsync(UserEntity user)
+    {
+        var addedEntity = await _context.Users.AddAsync(user);
+        await _context.SaveChangesAsync();
+
+        return addedEntity.Entity.Id;
+    }
+
     public async Task<UserEntity> GetByIdAsync(int id)
     {
         var user = await _context.Users
                                    .FirstOrDefaultAsync(o => o.Id == id);
         return user!;
+    }
+
+    public async Task<bool> IsUniqueEmailAsync(string email)
+    {
+        var userEntity = await _context.Users.FirstOrDefaultAsync(o => o.Email == email);
+        return userEntity == null;
+    }
+
+    public async Task<bool> IsUniqueUserNameAsync(string userName)
+    {
+        var userEntity = await _context.Users.FirstOrDefaultAsync(o => o.UserName == userName);
+        return userEntity == null;
     }
 }

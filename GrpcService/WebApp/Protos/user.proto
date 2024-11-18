@@ -6,6 +6,8 @@ package user;
 
 service User {
   rpc GetUser (GetUserRequest) returns (UserResponse);
+
+  rpc AddUser (AddUserRequest) returns (AddUserResponse);
 }
 
 // The request message containing the user's id.
@@ -20,4 +22,16 @@ message UserResponse {
   string Email = 3;
   string CreatedAt = 4;
   string UpdatedAt = 5;
+}
+
+// The request message containing the user's name and .
+message AddUserRequest {
+  string Name = 1; 
+  string UserName = 2;
+  string Email = 3;
+}
+
+// The response message containing the added user id.
+message AddUserResponse {
+	int32 Id = 1;
 }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Grpc.Core;
+using GrpcService.Entities;
 using GrpcService.Repositories.Interfaces;
 using static GrpcService.User;
 
@@ -42,5 +43,30 @@ public class UserService : UserBase
 
         var response = _mapper.Map<UserResponse>(entity);
         return response;
+    }
+
+    public async override Task<AddUserResponse> AddUser(AddUserRequest request, ServerCallContext context)
+    {
+        var isUniqueUserName = await _repository.IsUniqueUserNameAsync(request.UserName);
+        if (!isUniqueUserName)
+            return new AddUserResponse { Id = -1 };
+
+        var isUniqueEmail = await _repository.IsUniqueEmailAsync(request.Email);
+        if (!isUniqueEmail)
+            return new AddUserResponse { Id = -1 };
+
+        var dateTime = DateTime.Now;
+        var entity = new UserEntity
+        {
+            Name = request.Name,
+            UserName = request.UserName,
+            Email = request.Email,
+            IsDeleted = false,
+            CreatedAt = dateTime,
+            UpdatedAt = dateTime
+        };
+
+        var addedEntityId = await _repository.AddAsync(entity);
+        return new AddUserResponse { Id = addedEntityId };
     }
 }

@@ -26,7 +26,7 @@ public class OrganizationController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> GetOrganization(string name, string address)
+    public async Task<IActionResult> AddOrganization(string name, string address)
     {
         var response = await client.AddOrganizationAsync(new AddOrganizationRequest { Name = name, Address = address });
         return Ok(response);

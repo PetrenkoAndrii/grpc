@@ -1,4 +1,5 @@
 ﻿using GrpcClient;
+using HttpService.Extensions;
 using HttpService.Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using static GrpcClient.User;
@@ -19,9 +20,27 @@ public class UserController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetOrganization(int id)
+    public async Task<IActionResult> GetUser(int id)
     {
         var response = await client.GetUserAsync(new GetUserRequest { Id = id });
+        return Ok(response);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> AddUser(string name, string userName, string email)
+    {
+        bool isValid = email.ValidateEmail();
+        if (!isValid)
+            return BadRequest("Not valid email");
+        
+        var request = new AddUserRequest
+        {
+            Name = name,
+            UserName = userName,
+            Email = email
+        };
+
+        var response = await client.AddUserAsync(request);
         return Ok(response);
     }
 }
