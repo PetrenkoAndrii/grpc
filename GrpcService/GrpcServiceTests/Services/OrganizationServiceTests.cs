@@ -62,4 +62,24 @@ public class OrganizationServiceTests
         Assert.IsTrue(result.Id > 0);
         Assert.IsTrue(result.Id == AddedEntityId);
     }
+
+    [TestMethod]
+    public void GetOrganization_Success()
+    {
+        //Arrange
+        repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<int>()))
+            .ReturnsAsync(new OrganizationEntity
+            {
+                Address = "address",
+                Name = "name",
+            });
+        var request = new GetOrganizationRequest { Id = 1 };
+
+        //Act
+        var result = organizationService.GetOrganization(request, It.IsAny<ServerCallContext>());
+
+        //Assert
+        Assert.IsNotNull(result);
+        Assert.IsTrue(result.IsCompletedSuccessfully);
+    }
 }

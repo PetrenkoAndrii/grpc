@@ -76,4 +76,27 @@ public class OrganizationRepositoryTests
         //Assert
         Assert.IsFalse(result);
     }
+
+    [TestMethod]
+    public async Task GetById_Success()
+    {
+        //Arrange
+        //Act
+        var result = await repository.GetByIdAsync(3);
+
+        //Assert
+        Assert.IsNotNull(result);
+        Assert.IsFalse(result.IsDeleted);
+    }
+
+    [TestMethod]
+    public async Task GetById_NotSuccess()
+    {
+        //Arrange
+        //Act
+        var result = await repository.GetByIdAsync(100);
+
+        //Assert
+        Assert.IsNull(result);
+    }
 }

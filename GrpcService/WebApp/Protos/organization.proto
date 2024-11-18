@@ -7,6 +7,8 @@ package organization;
 // The Organization service definition.
 service Organization {
   rpc AddOrganization (AddOrganizationRequest) returns (AddOrganizationResponse);
+
+  rpc GetOrganization (GetOrganizationRequest) returns (OrganizationResponse);
 }
 
 // The request message containing the organization's name and .
@@ -18,4 +20,16 @@ message AddOrganizationRequest {
 // The response message containing the added organization id.
 message AddOrganizationResponse {
 	int32 Id = 1;
+}
+
+// The request message containing the organization's id.
+message GetOrganizationRequest {
+  int32 Id = 1;
+}
+
+// The response message containing the organization.
+message OrganizationResponse {
+  string Name = 1; 
+  string Address = 2;
+  //DateTime createdAt, updatedAt)
 }

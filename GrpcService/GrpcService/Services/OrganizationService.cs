@@ -46,4 +46,20 @@ public class OrganizationService : Organization.OrganizationBase
         var addedEntityId = await _repository.AddAsync(entity);
         return new AddOrganizationResponse { Id = addedEntityId };
     }
+
+    /// <summary>
+    /// Service for GetOrganization
+    /// </summary>
+    /// <param name="request">Holds GetOrganizationRequest parameters</param>
+    /// <param name="context">ServerCallContext context</param>
+    /// <returns>Single Organization item response</returns>
+    public override async Task<OrganizationResponse> GetOrganization(GetOrganizationRequest request, ServerCallContext context)
+    {
+        var entity = await _repository.GetByIdAsync(request.Id);
+        if (entity == null)
+            return new OrganizationResponse { Name = string.Empty, Address = string.Empty };
+
+        var response = _mapper.Map<OrganizationResponse>(entity);
+        return response;
+    }
 }

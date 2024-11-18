@@ -18,6 +18,13 @@ public class OrganizationController : ControllerBase
         client = _clientFactory.CreateClient<OrganizationClient>();
     }
 
+    [HttpGet]
+    public async Task<IActionResult> GetOrganization(int id)
+    {
+        var response = await client.GetOrganizationAsync(new GetOrganizationRequest { Id = id });
+        return Ok(response);
+    }
+
     [HttpPost]
     public async Task<IActionResult> GetOrganization(string name, string address)
     {

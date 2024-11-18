@@ -17,4 +17,11 @@ public interface IOrganizationRepository
     /// <param name="name">Name of Organization</param>
     /// <returns>True - if name is unique, False - if it isn't</returns>
     Task<bool> IsUniqueNameAsync(string name);
+
+    /// <summary>
+    /// Returns Organization by id
+    /// </summary>
+    /// <param name="id">The id of the Organization to look for</param>
+    /// <returns>Organization entity</returns>
+    Task<OrganizationEntity> GetByIdAsync(int id);
 }

@@ -30,4 +30,10 @@ public class OrganizationRepository : IOrganizationRepository
         var entity = await _context.Organizations.FirstOrDefaultAsync(o => o.Name == name);
         return entity == null;
     }
+
+    public async Task<OrganizationEntity> GetByIdAsync(int id)
+    {
+        var organization = await _context.Organizations.FirstOrDefaultAsync(o => o.Id == id);
+        return organization!;
+    }
 }
