@@ -10,10 +10,8 @@ public class UserProfileTests
     public void User_ShouldValidateMappingProfile()
     {
         // Arrange
-        var config = new MapperConfiguration(configure =>
-        {
-            configure.AddProfile(new UserProfile());
-        });
+        var config = new MapperConfiguration(configure => 
+                        configure.AddProfile(new UserProfile()));
         var mapper = config.CreateMapper();
 
         // Act

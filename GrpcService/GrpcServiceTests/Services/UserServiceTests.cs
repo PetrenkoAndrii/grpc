@@ -1,9 +1,10 @@
 ﻿using AutoMapper;
 using Grpc.Core;
 using GrpcService;
-using GrpcService.Entities;
-using GrpcService.Repositories.Interfaces;
+using GrpcService.Models.Responses;
+using GrpcService.ServiceHandlers.Interfaces;
 using GrpcService.Services;
+using Request = GrpcService.Models.Requests;
 using Moq;
 
 namespace GrpcServiceTests.Services;
@@ -11,22 +12,22 @@ namespace GrpcServiceTests.Services;
 [TestClass]
 public class UserServiceTests
 {
-    private readonly Mock<IUserRepository> repositoryMock = new();
+    private readonly Mock<IUserServiceHandler> userServiceHandler = new();
     private readonly Mock<IMapper> mapperMock = new();
 
     private readonly UserService userService;
 
     public UserServiceTests()
     {
-        userService = new(repositoryMock.Object, mapperMock.Object);
+        userService = new(userServiceHandler.Object, mapperMock.Object);
     }
 
     [TestMethod]
     public void GetUser_Success()
     {
         //Arrange
-        repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<int>()))
-            .ReturnsAsync(GetUserEntity());
+        userServiceHandler.Setup(r => r.GetUserAsync(It.IsAny<int>()))
+            .ReturnsAsync(GetUserResponse());
         var request = new GetUserRequest { Id = 1 };
 
         //Act
@@ -41,8 +42,8 @@ public class UserServiceTests
     public async Task GetUser_NotSuccess()
     {
         //Arrange
-        repositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<int>()))
-            .ReturnsAsync(It.IsAny<UserEntity>);
+        userServiceHandler.Setup(r => r.GetUserAsync(It.IsAny<int>()))
+            .ReturnsAsync(It.IsAny<GetUserResponse>);
         var request = new GetUserRequest { Id = 105 };
 
         //Act
@@ -59,10 +60,9 @@ public class UserServiceTests
     public async Task AddUser_NotUniqueUserName()
     {
         //Arrange
-        const bool IsUniqueName = false;
-
-        repositoryMock.Setup(r => r.IsUniqueUserNameAsync(It.IsAny<string>()))
-                    .ReturnsAsync(IsUniqueName);
+        const int NotInsertedIdValue = -1;
+        userServiceHandler.Setup(r => r.AddUserAsync(It.IsAny<Request.AddUserRequest>()))
+                    .ReturnsAsync(NotInsertedIdValue);
 
         var request = new AddUserRequest { Name = "duplicated user name" };
 
@@ -78,15 +78,11 @@ public class UserServiceTests
     public async Task AddUser_NotUniqueEmail()
     {
         //Arrange
-        const bool IsUniqueName = true;
-        const bool IsUniqueEmail = false;
+        const int NotInsertedIdValue = -1;
+        userServiceHandler.Setup(r => r.AddUserAsync(It.IsAny<Request.AddUserRequest>()))
+                    .ReturnsAsync(NotInsertedIdValue);
 
-        repositoryMock.Setup(r => r.IsUniqueUserNameAsync(It.IsAny<string>()))
-                    .ReturnsAsync(IsUniqueName);
-        repositoryMock.Setup(r => r.IsUniqueEmailAsync(It.IsAny<string>()))
-                    .ReturnsAsync(IsUniqueEmail);
-
-        var request = new AddUserRequest { Name = "duplicated email" };
+        var request = new AddUserRequest { Email = "duplicated email" };
 
         //Act
         var result = await userService.AddUser(request, It.IsAny<ServerCallContext>());
@@ -100,21 +96,14 @@ public class UserServiceTests
     public async Task AddUser_Success()
     {
         //Arrange
-        const bool IsUniqueName = true;
-        const bool IsUniqueEmail = true;
         const int AddedEntityId = 5;
 
-        repositoryMock.Setup(r => r.IsUniqueUserNameAsync(It.IsAny<string>()))
-                    .ReturnsAsync(IsUniqueName);
-        repositoryMock.Setup(r => r.IsUniqueEmailAsync(It.IsAny<string>()))
-                    .ReturnsAsync(IsUniqueEmail);
-
-        repositoryMock.Setup(r => r.AddAsync(It.IsAny<UserEntity>()))
+        userServiceHandler.Setup(r => r.AddUserAsync(It.IsAny<Request.AddUserRequest>()))
                     .ReturnsAsync(AddedEntityId);
 
-        var request = new AddUserRequest 
-        { 
-            Name = "name", 
+        var request = new AddUserRequest
+        {
+            Name = "name",
             UserName = "username",
             Email = "goodemail@gmail.com"
         };
@@ -128,7 +117,7 @@ public class UserServiceTests
         Assert.IsTrue(result.Id == AddedEntityId);
     }
 
-    private static UserEntity GetUserEntity() =>
+    private static GetUserResponse GetUserResponse() =>
         new()
         {
             Name = "Andrew",

@@ -1,24 +1,19 @@
 ﻿using AutoMapper;
 using Grpc.Core;
-using GrpcService.Entities;
-using GrpcService.Repositories.Interfaces;
+using GrpcService.ServiceHandlers.Interfaces;
 using static GrpcService.User;
+using Model = GrpcService.Models.Requests;
 
 namespace GrpcService.Services;
 
 public class UserService : UserBase
 {
-    private readonly IUserRepository _repository;
+    private readonly IUserServiceHandler _userServiceHandler;
     private readonly IMapper _mapper;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="UserService"/> class.
-    /// </summary>
-    /// <param name="repository">Repository</param>
-    /// <param name="mapper">The mapper.</param>
-    public UserService(IUserRepository repository, IMapper mapper)
+    public UserService(IUserServiceHandler userServiceHandler, IMapper mapper)
     {
-        _repository = repository;
+        _userServiceHandler = userServiceHandler;
         _mapper = mapper;
     }
 
@@ -30,46 +25,35 @@ public class UserService : UserBase
     /// <returns>Single User item response</returns>
     public async override Task<UserResponse> GetUser(GetUserRequest request, ServerCallContext context)
     {
-        var entity = await _repository.GetByIdAsync(request.Id);
-        if (entity == null)
-            return new UserResponse 
-            { 
-                Name = string.Empty, 
-                Username = string.Empty, 
+        var userResponse = await _userServiceHandler.GetUserAsync(request.Id);
+        if (userResponse == null)
+        {
+            return new UserResponse
+            {
+                Name = string.Empty,
+                Username = string.Empty,
                 Email = string.Empty,
                 CreatedAt = string.Empty,
                 UpdatedAt = string.Empty,
             };
+        }
 
-        var response = _mapper.Map<UserResponse>(entity);
+        var response = _mapper.Map<UserResponse>(userResponse);
         return response;
     }
 
+    /// <summary>
+    /// Service for AddUser
+    /// </summary>
+    /// <param name="request">Holds AddUserRequest parameters</param>
+    /// <param name="context">ServerCallContext context</param>
+    /// <returns>Id of created user</returns>
     public async override Task<AddUserResponse> AddUser(AddUserRequest request, ServerCallContext context)
     {
-        var response = new AddUserResponse { Id = -1 };
+        var modelRequest = _mapper.Map<Model.AddUserRequest>(request);
+        var userId = await _userServiceHandler.AddUserAsync(modelRequest);
 
-        var isUniqueUserName = await _repository.IsUniqueUserNameAsync(request.UserName);
-        if (!isUniqueUserName)
-            return response;
-
-        var isUniqueEmail = await _repository.IsUniqueEmailAsync(request.Email);
-        if (!isUniqueEmail)
-            return response;
-
-        var dateTime = DateTime.Now;
-        var entity = new UserEntity
-        {
-            Name = request.Name,
-            UserName = request.UserName,
-            Email = request.Email,
-            IsDeleted = false,
-            CreatedAt = dateTime,
-            UpdatedAt = dateTime
-        };
-
-        var addedEntityId = await _repository.AddAsync(entity);
-        response.Id = addedEntityId;
+        var response = new AddUserResponse { Id = userId };
         return response;
     }
 }

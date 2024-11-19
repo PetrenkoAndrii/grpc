@@ -2,6 +2,8 @@ using GrpcService;
 using GrpcService.Entities;
 using GrpcService.Repositories;
 using GrpcService.Repositories.Interfaces;
+using GrpcService.ServiceHandlers;
+using GrpcService.ServiceHandlers.Interfaces;
 using GrpcService.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +17,7 @@ builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.AddScoped<IOrganizationRepository, OrganizationRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserServiceHandler, UserServiceHandler>();
 
 var app = builder.Build();
 
