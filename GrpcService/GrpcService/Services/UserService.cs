@@ -9,11 +9,15 @@ namespace GrpcService.Services;
 public class UserService : UserBase
 {
     private readonly IUserServiceHandler _userServiceHandler;
+    private readonly IUserOrganizationAssociationServiceHandler _userOrganizationAssociationServiceHandler;
     private readonly IMapper _mapper;
 
-    public UserService(IUserServiceHandler userServiceHandler, IMapper mapper)
+    public UserService(IUserServiceHandler userServiceHandler,
+        IUserOrganizationAssociationServiceHandler userOrganizationAssociationServiceHandler,
+        IMapper mapper)
     {
         _userServiceHandler = userServiceHandler;
+        _userOrganizationAssociationServiceHandler = userOrganizationAssociationServiceHandler;
         _mapper = mapper;
     }
 
@@ -54,6 +58,21 @@ public class UserService : UserBase
         var userId = await _userServiceHandler.AddUserAsync(modelRequest);
 
         var response = new AddUserResponse { Id = userId };
+        return response;
+    }
+
+    /// <summary>
+    /// Service for AssociateUserToOrganization
+    /// </summary>
+    /// <param name="request">Holds UserOrganizationAssociationRequest parameters</param>
+    /// <param name="context">ServerCallContext context</param>
+    /// <returns>UserOrganizationAssociationResponse response which contains IsSuccess field</returns>
+    public async override Task<UserOrganizationAssociationResponse> AssociateUserToOrganization(UserOrganizationAssociationRequest request, ServerCallContext context)
+    {
+        var modelRequest = _mapper.Map<Model.UserOrganizationAssociationRequest>(request);
+        var isSuccessfullAssociated = await _userOrganizationAssociationServiceHandler.AssociateUserToOrganizationAsync(modelRequest);
+
+        var response = new UserOrganizationAssociationResponse { IsSuccess = isSuccessfullAssociated };
         return response;
     }
 }

@@ -115,4 +115,28 @@ public class OrganizationRepositoryTests
         Assert.IsNotNull(result);
         Assert.IsTrue(result);
     }
+
+    [TestMethod]
+    public async Task IsOrganizationExist_Success()
+    {
+        //Arrange
+        //Act
+        var result = await repository.IsOrganizationExistAsync(3);
+
+        //Assert
+        Assert.IsNotNull(result);
+        Assert.IsTrue(result);
+    }
+
+    [TestMethod]
+    public async Task IsOrganizationExist_NotSuccess()
+    {
+        //Arrange
+        //Act
+        var result = await repository.IsOrganizationExistAsync(100);
+
+        //Assert
+        Assert.IsNotNull(result);
+        Assert.IsFalse(result);
+    }
 }

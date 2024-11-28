@@ -9,7 +9,7 @@ public class UserRepository : IUserRepository
     private readonly AppDbContext _context;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="OrganizationRepository"/> class.
+    /// Initializes a new instance of the <see cref="UserRepository"/> class.
     /// </summary>
     /// <param name="context">AppDbContext</param>
     public UserRepository(AppDbContext context)
@@ -42,5 +42,11 @@ public class UserRepository : IUserRepository
     {
         var userEntity = await _context.Users.FirstOrDefaultAsync(o => o.UserName == userName);
         return userEntity == null;
+    }
+
+    public async Task<bool> IsUserExistAsync(int id)
+    {
+        var userEntity = await _context.Users.FirstOrDefaultAsync(u => u.Id == id && !u.IsDeleted);
+        return userEntity != null;
     }
 }

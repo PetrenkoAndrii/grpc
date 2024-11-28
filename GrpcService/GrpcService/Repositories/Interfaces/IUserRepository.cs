@@ -31,4 +31,11 @@ public interface IUserRepository
     /// <param name="email">User's email</param>
     /// <returns>True - if email is unique, False - if it isn't</returns>
     Task<bool> IsUniqueEmailAsync(string email);
+
+    /// <summary>
+    /// Returns is user exist via all users
+    /// </summary>
+    /// <param name="id">User's id</param>
+    /// <returns>True - if user exist, False - if it isn't</returns>
+    Task<bool> IsUserExistAsync(int id);
 }

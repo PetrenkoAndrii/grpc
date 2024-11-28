@@ -43,4 +43,17 @@ public class UserController : ControllerBase
         var response = await client.AddUserAsync(request);
         return Ok(response);
     }
+
+    [HttpPut]
+    public async Task<IActionResult> AssociateUserToOrganization(int userId, int organizationId)
+    {
+        var request = new UserOrganizationAssociationRequest
+        {
+            UserId = userId,
+            OrganizationId = organizationId
+        };
+
+        var response = await client.AssociateUserToOrganizationAsync(request);
+        return Ok(response);
+    }
 }

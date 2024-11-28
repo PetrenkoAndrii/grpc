@@ -8,6 +8,8 @@ service User {
   rpc GetUser (GetUserRequest) returns (UserResponse);
 
   rpc AddUser (AddUserRequest) returns (AddUserResponse);
+
+  rpc AssociateUserToOrganization (UserOrganizationAssociationRequest) returns (UserOrganizationAssociationResponse);
 }
 
 // The request message containing the user's id.
@@ -24,7 +26,7 @@ message UserResponse {
   string UpdatedAt = 5;
 }
 
-// The request message containing the user's name and .
+// The request message containing the user's name and username and email.
 message AddUserRequest {
   string Name = 1; 
   string UserName = 2;
@@ -34,4 +36,15 @@ message AddUserRequest {
 // The response message containing the added user id.
 message AddUserResponse {
 	int32 Id = 1;
+}
+
+// The request message containing the UserId and OrganizationId.
+message UserOrganizationAssociationRequest {
+	int32 UserId = 1;
+	int32 OrganizationId = 2;
+}
+
+// The response message containing the result of User Organization Association.
+message UserOrganizationAssociationResponse {
+	bool IsSuccess = 1;
 }

@@ -44,4 +44,10 @@ public class OrganizationRepository : IOrganizationRepository
         var result = await _context.SaveChangesAsync();
         return result > 0;
     }
+
+    public async Task<bool> IsOrganizationExistAsync(int id)
+    {
+        var entity = await _context.Organizations.FirstOrDefaultAsync(o => o.Id == id && !o.IsDeleted);
+        return entity != null;
+    }
 }

@@ -17,7 +17,9 @@ builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.AddScoped<IOrganizationRepository, OrganizationRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserOrganizationRepository, UserOrganizationRepository>();
 builder.Services.AddScoped<IUserServiceHandler, UserServiceHandler>();
+builder.Services.AddScoped<IUserOrganizationAssociationServiceHandler, UserOrganizationAssociationServiceHandler>();
 
 var app = builder.Build();
 

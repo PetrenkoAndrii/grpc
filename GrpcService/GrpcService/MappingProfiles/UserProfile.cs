@@ -18,5 +18,7 @@ public class UserProfile : Profile
         CreateMap<GetUserResponse, UserResponse>()
             .ForMember(dest => dest.CreatedAt, option => option.MapFrom(s => s.CreatedAt.ToString("O")))
             .ForMember(dest => dest.UpdatedAt, option => option.MapFrom(s => s.UpdatedAt.ToString("O")));
+
+        CreateMap<UserOrganizationAssociationRequest, Model.UserOrganizationAssociationRequest>();
     }
 }

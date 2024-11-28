@@ -100,4 +100,27 @@ public class UserRepositoryTests
         //Assert
         Assert.IsFalse(result);
     }
+
+    public async Task IsUserExist_Success()
+    {
+        //Arrange
+        //Act
+        var result = await repository.IsUserExistAsync(3);
+
+        //Assert
+        Assert.IsNotNull(result);
+        Assert.IsTrue(result);
+    }
+
+    [TestMethod]
+    public async Task IsUserExist_NotSuccess()
+    {
+        //Arrange
+        //Act
+        var result = await repository.IsUserExistAsync(100);
+
+        //Assert
+        Assert.IsNotNull(result);
+        Assert.IsFalse(result);
+    }
 }

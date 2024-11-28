@@ -7,4 +7,16 @@ public class UsersOrganizationsEntity : BaseEntity
 
     public int OrganizationId { get; set; }
     public OrganizationEntity? Organization { get; set; }
+
+    public UsersOrganizationsEntity()
+    { }
+
+    public UsersOrganizationsEntity(int usertId, int organizationId)
+    {
+        var dateOfExecution = DateTime.UtcNow;
+        UserId = usertId;
+        OrganizationId = organizationId;
+        CreatedAt = dateOfExecution;
+        UpdatedAt = dateOfExecution;
+    }
 }

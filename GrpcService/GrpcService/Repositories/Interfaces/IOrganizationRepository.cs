@@ -31,4 +31,11 @@ public interface IOrganizationRepository
     /// <param name="Organization">Organization to process</param>
     /// <returns>True - if entity was updated, False - if it wasn't</returns>
     Task<bool> DeleteAsync(OrganizationEntity organization);
+
+    /// <summary>
+    /// Returns is Organization exist via all organizations
+    /// </summary>
+    /// <param name="id">Organization's id</param>
+    /// <returns>True - if Organization exist, False - if it isn't</returns>
+    Task<bool> IsOrganizationExistAsync(int id);
 }
