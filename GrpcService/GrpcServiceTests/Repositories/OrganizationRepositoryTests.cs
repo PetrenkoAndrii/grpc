@@ -6,32 +6,13 @@ using Microsoft.EntityFrameworkCore;
 namespace GrpcServiceTests.Repositories;
 
 [TestClass]
-public class OrganizationRepositoryTests
+public class OrganizationRepositoryTests : BaseRepositoryTest
 {
-    private const int DbRecordsCount = 5;
-
-    private readonly AppDbContext context;
     private readonly OrganizationRepository repository;
 
-    public OrganizationRepositoryTests()
+    public OrganizationRepositoryTests() : base(initOrganizations: true)
     {
-        var options = new DbContextOptionsBuilder<AppDbContext>()
-                   .UseInMemoryDatabase("TestDatabase")
-                   .Options;
-        context = new AppDbContext(options);
-
         repository = new(context);
-    }
-
-    [TestInitialize]
-    public void Initialize()
-    {
-        for (int i = 1; i <= DbRecordsCount; i++)
-        {
-            context.Organizations.Add(
-                new OrganizationEntity { Address = "address", Name = $"name_{i}", IsDeleted = i % 2 == 0 });
-        }
-        context.SaveChanges();
     }
 
     [TestMethod]
@@ -104,7 +85,7 @@ public class OrganizationRepositoryTests
     public async Task Delete_Success()
     {
         //Arrange
-        var organization = await repository.GetByIdAsync(2);
+        var organization = await repository.GetByIdAsync(1);
         organization.IsDeleted = true;
         organization.DeletedAt = DateTime.Now;
 

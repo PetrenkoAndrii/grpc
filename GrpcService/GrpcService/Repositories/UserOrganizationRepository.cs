@@ -1,26 +1,33 @@
 ﻿using GrpcService.Entities;
 using GrpcService.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace GrpcService.Repositories;
 
-public class UserOrganizationRepository : IUserOrganizationRepository
+/// <summary>
+/// Initializes a new instance of the <see cref="UserOrganizationRepository"/> class.
+/// </summary>
+/// <param name="context">AppDbContext</param>
+public class UserOrganizationRepository(AppDbContext context) : BaseRepository(context), IUserOrganizationRepository
 {
-    private readonly AppDbContext _context;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="UserOrganizationRepository"/> class.
-    /// </summary>
-    /// <param name="context">AppDbContext</param>
-    public UserOrganizationRepository(AppDbContext context)
-    {
-        _context = context;
-
-    }
     public async Task<bool> AssociateUserToOrganizationAsync(UsersOrganizationsEntity entity)
     {
-        /*var addedEntity =*/ await _context.UsersOrganizations.AddAsync(entity);
-        var result = await _context.SaveChangesAsync();
-        return result > 0;
-        //return addedEntity.Entity.Id;
+        await _context.UsersOrganizations.AddAsync(entity);
+        return await IsSuccessfullSavedAsync();
+    }
+
+    public async Task<bool> DisassociateUserFromOrganizationAsync(int userId, int organizationId)
+    {
+        var userOrganizationEntity = await _context.UsersOrganizations
+                                            .FirstOrDefaultAsync(uo => uo.UserId == userId &&
+                                                uo.OrganizationId == organizationId &&
+                                                !uo.IsDeleted);
+        if (userOrganizationEntity == null)
+            return false;
+
+        userOrganizationEntity.IsDeleted = true;
+        userOrganizationEntity.DeletedAt = DateTime.UtcNow;
+
+        return await IsSuccessfullSavedAsync();
     }
 }

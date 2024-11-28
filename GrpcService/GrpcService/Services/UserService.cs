@@ -69,10 +69,31 @@ public class UserService : UserBase
     /// <returns>UserOrganizationAssociationResponse response which contains IsSuccess field</returns>
     public async override Task<UserOrganizationAssociationResponse> AssociateUserToOrganization(UserOrganizationAssociationRequest request, ServerCallContext context)
     {
-        var modelRequest = _mapper.Map<Model.UserOrganizationAssociationRequest>(request);
+        var modelRequest = MapRequest(request);
         var isSuccessfullAssociated = await _userOrganizationAssociationServiceHandler.AssociateUserToOrganizationAsync(modelRequest);
 
-        var response = new UserOrganizationAssociationResponse { IsSuccess = isSuccessfullAssociated };
+        var response = GetResponse(isSuccessfullAssociated);
         return response;
     }
+
+    /// <summary>
+    /// Service for DisassociateUserFromOrganization
+    /// </summary>
+    /// <param name="request">Holds UserOrganizationAssociationRequest parameters</param>
+    /// <param name="context">ServerCallContext context</param>
+    /// <returns>UserOrganizationAssociationResponse response which contains IsSuccess field</returns>
+    public async override Task<UserOrganizationAssociationResponse> DisassociateUserFromOrganization(UserOrganizationAssociationRequest request, ServerCallContext context)
+    {
+        var modelRequest = MapRequest(request);
+        var isSuccessfullDisassociated = await _userOrganizationAssociationServiceHandler.DisassociateUserFromOrganizationAsync(modelRequest);
+
+        var response = GetResponse(isSuccessfullDisassociated);
+        return response;
+    }
+
+    private static UserOrganizationAssociationResponse GetResponse(bool isSuccess) =>
+        new() { IsSuccess = isSuccess };
+
+    private Model.UserOrganizationAssociationRequest MapRequest(UserOrganizationAssociationRequest request) =>
+        _mapper.Map<Model.UserOrganizationAssociationRequest>(request);
 }

@@ -164,6 +164,51 @@ public class UserServiceTests
         Assert.IsTrue(result.IsSuccess);
     }
 
+    public async Task DisassociateUserFromOrganization_NotSuccess()
+    {
+        //Arrange
+        const bool IsAssociationSuccess = false;
+
+        userOrganizationAssociationServiceHandlerMock.Setup(r => r.DisassociateUserFromOrganizationAsync(It.IsAny<Request.UserOrganizationAssociationRequest>()))
+                    .ReturnsAsync(IsAssociationSuccess);
+
+        var request = new UserOrganizationAssociationRequest
+        {
+            UserId = 1,
+            OrganizationId = 1
+        };
+
+        //Act
+        var result = await userService.DisassociateUserFromOrganization(request, It.IsAny<ServerCallContext>());
+
+        //Assert
+        Assert.IsNotNull(result);
+        Assert.IsFalse(result.IsSuccess);
+    }
+
+    [TestMethod]
+    public async Task DisassociateUserFromOrganization_Success()
+    {
+        //Arrange
+        const bool IsAssociationSuccess = true;
+
+        userOrganizationAssociationServiceHandlerMock.Setup(r => r.DisassociateUserFromOrganizationAsync(It.IsAny<Request.UserOrganizationAssociationRequest>()))
+                    .ReturnsAsync(IsAssociationSuccess);
+
+        var request = new UserOrganizationAssociationRequest
+        {
+            UserId = 1,
+            OrganizationId = 1
+        };
+
+        //Act
+        var result = await userService.DisassociateUserFromOrganization(request, It.IsAny<ServerCallContext>());
+
+        //Assert
+        Assert.IsNotNull(result);
+        Assert.IsTrue(result.IsSuccess);
+    }
+
     private static GetUserResponse GetUserResponse() =>
         new()
         {

@@ -4,19 +4,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GrpcService.Repositories;
 
-public class UserRepository : IUserRepository
+/// <summary>
+/// Initializes a new instance of the <see cref="UserRepository"/> class.
+/// </summary>
+/// <param name="context">AppDbContext</param>
+public class UserRepository(AppDbContext context) : BaseRepository(context), IUserRepository
 {
-    private readonly AppDbContext _context;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="UserRepository"/> class.
-    /// </summary>
-    /// <param name="context">AppDbContext</param>
-    public UserRepository(AppDbContext context)
-    {
-        _context = context;
-    }
-
     public async Task<int> AddAsync(UserEntity user)
     {
         var addedEntity = await _context.Users.AddAsync(user);

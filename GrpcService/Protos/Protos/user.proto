@@ -10,6 +10,8 @@ service User {
   rpc AddUser (AddUserRequest) returns (AddUserResponse);
 
   rpc AssociateUserToOrganization (UserOrganizationAssociationRequest) returns (UserOrganizationAssociationResponse);
+
+  rpc DisassociateUserFromOrganization (UserOrganizationAssociationRequest) returns (UserOrganizationAssociationResponse);
 }
 
 // The request message containing the user's id.

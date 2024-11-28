@@ -110,4 +110,42 @@ public class UserOrganizationAssociationServiceHandlerTests
         Assert.IsNotNull(result);
         Assert.IsTrue(result);
     }
+
+    [TestMethod]
+    public async Task DisassociateUserFromOrganization_NotSuccess()
+    {
+        //Arrange
+        const bool IsDisassociationSuccess = false;
+
+        userOrganizationRepositoryMock.Setup(r => r.DisassociateUserFromOrganizationAsync(It.IsAny<int>(), It.IsAny<int>()))
+            .ReturnsAsync(IsDisassociationSuccess);
+
+        var request = new UserOrganizationAssociationRequest { UserId = 1, OrganizationId = 1 };
+
+        //Act
+        var result = await serviceHandler.DisassociateUserFromOrganizationAsync(request);
+
+        //Assert
+        Assert.IsNotNull(result);
+        Assert.IsFalse(result);
+    }
+
+    [TestMethod]
+    public async Task DisassociateUserFromOrganization_Success()
+    {
+        //Arrange
+        const bool IsDisassociationSuccess = true;
+
+        userOrganizationRepositoryMock.Setup(r => r.DisassociateUserFromOrganizationAsync(It.IsAny<int>(), It.IsAny<int>()))
+            .ReturnsAsync(IsDisassociationSuccess);
+
+        var request = new UserOrganizationAssociationRequest { UserId = 1, OrganizationId = 1 };
+
+        //Act
+        var result = await serviceHandler.DisassociateUserFromOrganizationAsync(request);
+
+        //Assert
+        Assert.IsNotNull(result);
+        Assert.IsTrue(result);
+    }
 }

@@ -1,37 +1,15 @@
-﻿using GrpcService.Entities;
-using GrpcService.Repositories;
-using GrpcService;
-using Microsoft.EntityFrameworkCore;
+﻿using GrpcService.Repositories;
 
 namespace GrpcServiceTests.Repositories;
 
 [TestClass]
-public class UserRepositoryTests
+public class UserRepositoryTests : BaseRepositoryTest
 {
-    private const int DbRecordsCount = 5;
-
-    private readonly AppDbContext context;
     private readonly UserRepository repository;
 
-    public UserRepositoryTests()
+    public UserRepositoryTests() : base(initUsers: true)
     {
-        var options = new DbContextOptionsBuilder<AppDbContext>()
-                   .UseInMemoryDatabase("TestDatabase")
-                   .Options;
-        context = new AppDbContext(options);
-
         repository = new(context);
-    }
-
-    [TestInitialize]
-    public void Initialize()
-    {
-        for (int i = 1; i <= DbRecordsCount; i++)
-        {
-            context.Users.Add(
-                new UserEntity { Name = $"Name_{i}", UserName = $"UserName_{i}", Email = $"test_{i}@gmail.com" });
-        }
-        context.SaveChanges();
     }
 
     [TestMethod]

@@ -26,7 +26,7 @@ public class UserController : ControllerBase
         return Ok(response);
     }
 
-    [HttpPost]
+    [HttpPost("add-user")]
     public async Task<IActionResult> AddUser(string name, string userName, string email)
     {
         bool isValid = email.ValidateEmail();
@@ -44,7 +44,7 @@ public class UserController : ControllerBase
         return Ok(response);
     }
 
-    [HttpPut]
+    [HttpPost("associate-user-to-organization")]
     public async Task<IActionResult> AssociateUserToOrganization(int userId, int organizationId)
     {
         var request = new UserOrganizationAssociationRequest
@@ -54,6 +54,19 @@ public class UserController : ControllerBase
         };
 
         var response = await client.AssociateUserToOrganizationAsync(request);
+        return Ok(response);
+    }
+
+    [HttpPut("disassociate-user-from-organization")]
+    public async Task<IActionResult> DosassociateUserFromOrganization(int userId, int organizationId)
+    {
+        var request = new UserOrganizationAssociationRequest
+        {
+            UserId = userId,
+            OrganizationId = organizationId
+        };
+
+        var response = await client.DisassociateUserFromOrganizationAsync(request);
         return Ok(response);
     }
 }

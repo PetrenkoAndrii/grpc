@@ -42,4 +42,10 @@ public class UserOrganizationAssociationServiceHandler : IUserOrganizationAssoci
         var isSuccess = await _userOrganizationRepository.AssociateUserToOrganizationAsync(entity);
         return isSuccess;
     }
+
+    public async Task<bool> DisassociateUserFromOrganizationAsync(Model.UserOrganizationAssociationRequest request)
+    {
+        var isSuccess = await _userOrganizationRepository.DisassociateUserFromOrganizationAsync(request.UserId, request.OrganizationId);
+        return isSuccess;
+    }
 }

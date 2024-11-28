@@ -4,19 +4,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GrpcService.Repositories;
 
-public class OrganizationRepository : IOrganizationRepository
+/// <summary>
+/// Initializes a new instance of the <see cref="OrganizationRepository"/> class.
+/// </summary>
+/// <param name="context">AppDbContext</param>
+public class OrganizationRepository(AppDbContext context) : BaseRepository(context), IOrganizationRepository
 {
-    private readonly AppDbContext _context;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="OrganizationRepository"/> class.
-    /// </summary>
-    /// <param name="context">AppDbContext</param>
-    public OrganizationRepository(AppDbContext context)
-    {
-        _context = context;
-    }
-
     public async Task<int> AddAsync(OrganizationEntity organization)
     {
         var addedEntity = await _context.Organizations.AddAsync(organization);
@@ -34,16 +27,13 @@ public class OrganizationRepository : IOrganizationRepository
     public async Task<OrganizationEntity> GetByIdAsync(int id)
     {
         var organization = await _context.Organizations
-                                        .Include(o => o.UsersOrganizations)
-                                        .FirstOrDefaultAsync(o => o.Id == id);
+                                        .Include(o => o.UsersOrganizations.Where(uo => !uo.IsDeleted))
+                                        .FirstOrDefaultAsync(o => o.Id == id && !o.IsDeleted);
         return organization!;
     }
 
-    public async Task<bool> DeleteAsync(OrganizationEntity organization)
-    {
-        var result = await _context.SaveChangesAsync();
-        return result > 0;
-    }
+    public async Task<bool> DeleteAsync(OrganizationEntity organization) =>
+        await IsSuccessfullSavedAsync();
 
     public async Task<bool> IsOrganizationExistAsync(int id)
     {
