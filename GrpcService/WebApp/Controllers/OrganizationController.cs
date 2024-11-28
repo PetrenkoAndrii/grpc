@@ -1,7 +1,7 @@
-﻿using GrpcClient;
+﻿using GrpcService;
 using HttpService.Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using static GrpcClient.Organization;
+using static GrpcService.Organization;
 
 namespace HttpService.Controllers;
 

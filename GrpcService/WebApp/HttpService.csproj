@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Protos\organization.proto" />
-    <None Remove="Protos\user.proto" />
+    <None Remove="..\Protos\Protos\organization.proto" />
+    <None Remove="..\Protos\Protos\user.proto" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,8 +22,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Protobuf Include="Protos\organization.proto" GrpcServices="Client" />
-    <Protobuf Include="Protos\user.proto" GrpcServices="Client" />
+    <ProjectReference Include="..\Protos\Protos.csproj" />
+	<Protobuf Include="..\Protos\Protos\organization.proto" GrpcServices="Client" />
+	<Protobuf Include="..\Protos\Protos\user.proto" GrpcServices="Client" />
   </ItemGroup>
 
 </Project>

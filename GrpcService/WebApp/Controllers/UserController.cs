@@ -1,8 +1,8 @@
-﻿using GrpcClient;
+﻿using GrpcService;
 using HttpService.Extensions;
 using HttpService.Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using static GrpcClient.User;
+using static GrpcService.User;
 
 namespace HttpService.Controllers;
 
